@@ -1,0 +1,39 @@
+name: Build QA Module
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: brew install ldid
+
+    - name: Setup Theos
+      run: |
+        export THEOS=$HOME/theos
+        git clone --recursive https://github.com/theos/theos.git $THEOS
+        rm -rf $THEOS/sdks
+        git clone --depth 1 https://github.com/theos/sdks.git $THEOS/sdks
+
+    - name: Build Dylib
+      run: |
+        export THEOS=$HOME/theos
+        make clean
+        make
+
+    - name: Extract Dylib
+      run: |
+        find .theos -name "*.dylib" -exec cp {} ./QATestingUtils.dylib \;
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: QA-Testing-Utils
+        path: ./QATestingUtils.dylib
