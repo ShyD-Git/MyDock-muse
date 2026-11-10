@@ -3,9 +3,9 @@ ARCHS := arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = TeproMock
+TWEAK_NAME = QATestingUtils
 
-TeproMock_FILES = Tweak.x
-TeproMock_CFLAGS = -fobjc-arc -Wno-error=deprecated-declarations
+QATestingUtils_FILES = Tweak.x
+QATestingUtils_CFLAGS = -fobjc-arc -Wno-error=deprecated-declarations
 
 include $(THEOS_MAKE_PATH)/tweak.mk
