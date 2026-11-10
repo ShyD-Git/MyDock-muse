@@ -1,4 +1,4 @@
-name: Build QA Module
+name: Build QA Utils
 
 on:
   push:
@@ -8,32 +8,30 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+
     steps:
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install Dependencies
-      run: brew install ldid
-
-    - name: Setup Theos
+    - name: Setup Environment
       run: |
+        brew install ldid xz
         export THEOS=$HOME/theos
         git clone --recursive https://github.com/theos/theos.git $THEOS
-        rm -rf $THEOS/sdks
         git clone --depth 1 https://github.com/theos/sdks.git $THEOS/sdks
 
-    - name: Build Dylib
+    - name: Compile Utils
       run: |
         export THEOS=$HOME/theos
+        export PATH=$THEOS/bin:$PATH
         make clean
-        make
+        make package FINALPACKAGE=1
 
-    - name: Extract Dylib
-      run: |
-        find .theos -name "*.dylib" -exec cp {} ./QATestingUtils.dylib \;
-
-    - name: Upload Artifact
+    - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
-        name: QA-Testing-Utils
-        path: ./QATestingUtils.dylib
+        name: QATestingUtils-dylib
+        path: |
+          .theos/obj/arm64/QATestingUtils.dylib
+          .theos/obj/arm64e/QATestingUtils.dylib
+        if-no-files-found: error
