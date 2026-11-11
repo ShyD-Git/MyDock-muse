@@ -15,9 +15,14 @@ jobs:
 
     - name: Setup Environment
       run: |
-        brew install ldid xz
+        brew install ldid xz dpkg
         export THEOS=$HOME/theos
+        
+        # Clone Theos
         git clone --recursive https://github.com/theos/theos.git $THEOS
+        
+        # Xóa thư mục sdks rỗng/conflict do Theos tạo ra trước khi clone SDK thật
+        rm -rf $THEOS/sdks
         git clone --depth 1 https://github.com/theos/sdks.git $THEOS/sdks
 
     - name: Compile Utils
