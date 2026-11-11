@@ -2,136 +2,117 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
-// Neutralized Strings
-static NSString * const kTierProKey   = @"aXNfcHJlbWl1bV91c2Vy"; // is_premium_user
-static NSString * const kTierSubKey   = @"aXNfcHJvX3VzZXI=";     // is_pro_user
-static NSString * const kTargetView   = @"UGF5d2FsbFZpZXdDb250cm9sbGVy"; // PaywallViewController
-
-static NSString *decodeB64(NSString *b64) {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:b64 options:0];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-}
-
-static BOOL isUpgradeView(Class cls) {
-    NSString *className = NSStringFromClass(cls);
-    if (!className) return NO;
+// Hàm ghi log ra file cho Filza đọc
+static void qaLog(NSString *format, ...) {
+    va_list args;
+    va_start(args, format);
+    NSString *msg = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
     
-    NSString *targetStr = decodeB64(kTargetView);
-    NSString *lowerCls = [className lowercaseString];
+    NSString *logPath = @"/var/mobile/Documents/QATestingUtils.log";
+    NSString *timestamp = [NSDateFormatter localizedStringFromDate:[NSDate date] dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle];
+    NSString *line = [NSString stringWithFormat:@"[%@] %@\n", timestamp, msg];
     
-    if ([className isEqualToString:targetStr]) return YES;
-    if ([lowerCls containsString:@"paywall"]) return YES;
-    if ([lowerCls containsString:@"purchase"] && [lowerCls containsString:@"view"]) return YES;
-    if ([lowerCls containsString:@"sub"] && [lowerCls containsString:@"view"]) return YES;
-    
-    return NO;
-}
-
-// ---------------------------------------------
-// 1. Intercept Upgrade Modals
-// ---------------------------------------------
-%hook UIViewController
-- (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion {
-    if (isUpgradeView([viewControllerToPresent class])) {
-        NSLog(@"[QATestingUtils] Intercepted Modal: %@", NSStringFromClass([viewControllerToPresent class]));
-        if (completion) completion();
-        return;
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+    if (fileHandle == nil) {
+        [line writeToFile:logPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    } else {
+        [fileHandle seekToEndOfFile];
+        [fileHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
+        [fileHandle closeFile];
     }
-    %orig;
 }
-%end
 
-// ---------------------------------------------
-// 2. Mock State via NSUserDefaults
-// ---------------------------------------------
-%hook NSUserDefaults
-- (BOOL)boolForKey:(NSString *)defaultName {
-    NSString *proKey = decodeB64(kTierProKey);
-    NSString *subKey = decodeB64(kTierSubKey);
+// --- 1. Hook Bắt Request Mạng ---
+%hook NSURLSession
+- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler {
+    qaLog(@"🚀 NET REQ: %@", request.URL.absoluteString);
     
-    if ([defaultName isEqualToString:proKey] || [defaultName isEqualToString:subKey] || 
-        [defaultName containsString:@"premium"] || [defaultName containsString:@"pro"] ||
-        [defaultName containsString:@"subscribed"]) {
-        return YES;
-    }
-    return %orig;
-}
-
-- (id)objectForKey:(NSString *)defaultName {
-    NSString *proKey = decodeB64(kTierProKey);
-    if ([defaultName isEqualToString:proKey]) {
-        return @(YES);
-    }
-    return %orig;
-}
-%end
-
-// ---------------------------------------------
-// 3. StoreKit Mocking
-// ---------------------------------------------
-%hook SKPaymentQueue
-+ (instancetype)defaultQueue {
-    return %orig;
-}
-%end
-
-// ---------------------------------------------
-// 4. Dynamic State Patching
-// ---------------------------------------------
-static void scanMethods(Class cls) {
-    unsigned int methodCount = 0;
-    Method *methods = class_copyMethodList(cls, &methodCount);
-    if (!methods) return;
-    
-    NSString *className = NSStringFromClass(cls);
-    NSString *lowerCls = [className lowercaseString];
-    
-    // Only scan relevant classes to avoid system crashes
-    if ([lowerCls containsString:@"premium"] || [lowerCls containsString:@"pro"] || 
-        [lowerCls containsString:@"sub"] || [lowerCls containsString:@"store"] || 
-        [lowerCls containsString:@"purchase"] || [lowerCls containsString:@"user"]) {
+    if ([request.URL.absoluteString containsString:@"verify"] || [request.URL.absoluteString containsString:@"receipt"] || [request.URL.absoluteString containsString:@"purchase"]) {
+        qaLog(@"🛑 BLOCKED & MOCKED: %@", request.URL.absoluteString);
         
-        for (unsigned int i = 0; i < methodCount; i++) {
-            Method method = methods[i];
-            SEL selector = method_getName(method);
-            NSString *methodName = NSStringFromSelector(selector);
-            NSString *lowerMethod = [methodName lowercaseString];
+        NSString *fakeJSON = @"{\"status\":\"success\",\"is_premium\":true,\"expires\":\"2099-12-31\"}";
+        NSData *fakeData = [fakeJSON dataUsingEncoding:NSUTF8StringEncoding];
+        NSHTTPURLResponse *fakeResp = [[NSHTTPURLResponse alloc] initWithURL:request.URL statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{@"Content-Type":@"application/json"}];
+        
+        if (completionHandler) {
+            completionHandler(fakeData, fakeResp, nil);
+        }
+        return %orig(request, ^(NSData *data, NSURLResponse *response, NSError *error){});
+    }
+    return %orig;
+}
+%end
+
+// --- 2. Hook Thư viện RevenueCat ---
+%hook RCPurchases
++ (instancetype)sharedPurchases {
+    return %orig;
+}
+- (void)getCustomerInfoWithCompletionBlock:(void (^)(id customerInfo, NSError *error))completion {
+    qaLog(@"🐱 RevenueCat Hooked - Mocking Entitlements");
+    
+    id info = [[objc_getClass("RCCustomerInfo") alloc] init];
+    NSDictionary *fakeEntitlements = @{@"pro": @{@"isActive": @YES}, @"premium": @{@"isActive": @YES}};
+    
+    @try {
+        [info setValue:fakeEntitlements forKey:@"entitlements"];
+        [info setValue:@{@"pro": @{@"isActive": @YES}} forKey:@"_entitlements"];
+    } @catch (NSException *e) {}
+
+    if (completion) completion(info, nil);
+}
+%end
+
+// --- 3. Quét hàm Bool (Bắt cả Swift) ---
+static void scanSwiftMethods(void) {
+    unsigned int classCount = 0;
+    Class *classes = objc_copyClassList(&classCount);
+    if (!classes) return;
+
+    for (unsigned int i = 0; i < classCount; i++) {
+        Class cls = classes[i];
+        NSString *className = NSStringFromClass(cls);
+        
+        if ([className hasPrefix:@"_TtC"] || [className.lowercaseString containsString:@"pro"] || [className.lowercaseString containsString:@"store"] || [className.lowercaseString containsString:@"user"]) {
+            unsigned int methodCount = 0;
+            Method *methods = class_copyMethodList(cls, &methodCount);
+            if (!methods) continue;
             
-            if ([lowerMethod containsString:@"premium"] || [lowerMethod containsString:@"pro"] || 
-                [lowerMethod containsString:@"sub"] || [lowerMethod containsString:@"purchased"]) {
+            for (unsigned int j = 0; j < methodCount; j++) {
+                Method method = methods[j];
+                SEL selector = method_getName(method);
+                NSString *methodName = NSStringFromSelector(selector);
                 
-                const char *types = method_getTypeEncoding(method);
-                // Look for BOOL return types
-                if (types && (types[0] == 'c' || types[0] == 'B')) {
-                    IMP newImp = imp_implementationWithBlock(^BOOL(id _self, ...) {
-                        return YES;
-                    });
-                    method_setImplementation(method, newImp);
-                    NSLog(@"[QATestingUtils] Patched State: -[%@ %@]", className, methodName);
+                if ([methodName.lowercaseString containsString:@"premium"] || 
+                    [methodName.lowercaseString containsString:@"pro"] || 
+                    [methodName.lowercaseString containsString:@"active"] ||
+                    [methodName.lowercaseString containsString:@"sub"]) {
+                    
+                    const char *types = method_getTypeEncoding(method);
+                    if (types && (types[0] == 'c' || types[0] == 'B')) {
+                        IMP newImp = imp_implementationWithBlock(^BOOL(id _self, ...) {
+                            return YES;
+                        });
+                        method_setImplementation(method, newImp);
+                        qaLog(@"✂️ Swift Hook: -[%@ %@]", className, methodName);
+                    }
                 }
             }
+            free(methods);
         }
     }
-    free(methods);
+    free(classes);
 }
 
 %ctor {
-    NSLog(@"[QATestingUtils] Loaded. Scanning classes...");
+    qaLog(@"=======================");
+    qaLog(@"🚀 QATestingUtils Loaded!");
+    qaLog(@"=======================");
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        unsigned int classCount = 0;
-        Class *classes = objc_copyClassList(&classCount);
-        if (classes) {
-            for (unsigned int i = 0; i < classCount; i++) {
-                Class cls = classes[i];
-                NSString *className = NSStringFromClass(cls);
-                if ([className hasPrefix:@"NS"] || [className hasPrefix:@"UI"] || 
-                    [className hasPrefix:@"SK"] || [className hasPrefix:@"WK"]) {
-                    continue;
-                }
-                scanMethods(cls);
-            }
-            free(classes);
-        }
+        qaLog(@"Bắt đầu quét class...");
+        scanSwiftMethods();
+        qaLog(@"Quét xong.");
     });
 }
