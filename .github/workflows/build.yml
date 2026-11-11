@@ -36,7 +36,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: QATestingUtils-dylib
-        path: |
-          .theos/obj/arm64/QATestingUtils.dylib
-          .theos/obj/arm64e/QATestingUtils.dylib
+        path: .theos/obj/**/*.dylib
         if-no-files-found: error
