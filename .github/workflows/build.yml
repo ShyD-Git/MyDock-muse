@@ -1,0 +1,26 @@
+name: Build MyDock (macOS)
+
+# Chạy tự động khi push file lên nhánh main, hoặc bấm chạy tay (Run workflow).
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build fat dylib (arm64 + arm64e)
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Upload dylib
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyDock-v2.9.11-fat-macos
+          path: MyDock-v2.9.11-fat-macos.dylib
+          if-no-files-found: error
