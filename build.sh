@@ -1,12 +1,12 @@
 #!/bin/bash
-# Build MyDock v2.9.13-log (fat arm64 + arm64e) trên macOS với Xcode/Apple ld64.
+# Build MyDock v2.9.14-log (fat arm64 + arm64e) trên macOS với Xcode/Apple ld64.
 # Chạy trên GitHub Actions (macos runner) hoặc máy Mac có Xcode.
 # Apple ld64 tự tạo LC_DYLD_CHAINED_FIXUPS đúng chuẩn cho arm64e,
 # thứ mà lld trên Linux không làm được (đó là lý do bản fat build bằng
 # lld bị crash khi tiêm vào app hệ thống arm64e như Ghi chú).
 set -euo pipefail
 
-SRC="MyDock-v2.9.13-log-source.m"
+SRC="MyDock-v2.9.14-log-source.m"
 OUT="MyDock-v2.9.11-fat-macos.dylib"
 
 echo "=== Xcode / SDK ==="
