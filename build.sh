@@ -1,1 +1,45 @@
-IyEvYmluL2Jhc2gKIyBCdWlsZCBNeURvY2sgdjIuOS4xMy1sb2cgKGZhdCBhcm02NCArIGFybTY0ZSkgdHLDqm4gbWFjT1MgduG7m2kgWGNvZGUvQXBwbGUgbGQ2NC4KIyBDaOG6oXkgdHLDqm4gR2l0SHViIEFjdGlvbnMgKG1hY29zIHJ1bm5lcikgaG/hurdjIG3DoXkgTWFjIGPDsyBYY29kZS4KIyBBcHBsZSBsZDY0IHThu7EgdOG6oW8gTENfRFlMRF9DSEFJTkVEX0ZJWFVQUyDEkcO6bmcgY2h14bqpbiBjaG8gYXJtNjRlLAojIHRo4bupIG3DoCBsbGQgdHLDqm4gTGludXgga2jDtG5nIGzDoG0gxJHGsOG7o2MgKMSRw7MgbMOgIGzDvSBkbyBi4bqjbiBmYXQgYnVpbGQgYuG6sW5nCiMgbGxkIGLhu4sgY3Jhc2gga2hpIHRpw6ptIHbDoG8gYXBwIGjhu4cgdGjhu5FuZyBhcm02NGUgbmjGsCBHaGkgY2jDuikuCnNldCAtZXVvIHBpcGVmYWlsCgpTUkM9Ik15RG9jay12Mi45LjEzLWxvZy1zb3VyY2UubSIKT1VUPSJNeURvY2stdjIuOS4xMS1mYXQtbWFjb3MuZHlsaWIiCgplY2hvICI9PT0gWGNvZGUgLyBTREsgPT09Igp4Y29kZWJ1aWxkIC12ZXJzaW9uClNESz0iJCh4Y3J1biAtLXNkayBpcGhvbmVvcyAtLXNob3ctc2RrLXBhdGgpIgplY2hvICJTREs6ICRTREsiCgplY2hvICI9PT0gQnVpbGQgZmF0IGR5bGliIChhcm02NCArIGFybTY0ZSkgPT09Igp4Y3J1biAtLXNkayBpcGhvbmVvcyBjbGFuZyBcCiAgLWFyY2ggYXJtNjQgLWFyY2ggYXJtNjRlIFwKICAtaXN5c3Jvb3QgIiRTREsiIFwKICAtbWlwaG9uZW9zLXZlcnNpb24tbWluPTE2LjAgXAogIC1mb2JqYy1hcmMgLU8yIFwKICAtZHluYW1pY2xpYiBcCiAgLWluc3RhbGxfbmFtZSAiQHJwYXRoL015RG9jay5keWxpYiIgXAogIC1YbGlua2VyIC1ycGF0aCAtWGxpbmtlciAvdmFyL2piL0xpYnJhcnkvRnJhbWV3b3JrcyBcCiAgLVhsaW5rZXIgLXJwYXRoIC1YbGlua2VyIC92YXIvamIvdXNyL2xpYiBcCiAgLVhsaW5rZXIgLXJwYXRoIC1YbGlua2VyICJAbG9hZGVyX3BhdGgvLmpicm9vdC9MaWJyYXJ5L0ZyYW1ld29ya3MiIFwKICAtWGxpbmtlciAtcnBhdGggLVhsaW5rZXIgIkBsb2FkZXJfcGF0aC8uamJyb290L3Vzci9saWIiIFwKICAtRiAiJFBXRCIgXAogIC1mcmFtZXdvcmsgQ3lkaWFTdWJzdHJhdGUgXAogIC1mcmFtZXdvcmsgRm91bmRhdGlvbiAtZnJhbWV3b3JrIFVJS2l0IFwKICAtZnJhbWV3b3JrIENvcmVGb3VuZGF0aW9uIC1mcmFtZXdvcmsgQ29yZUdyYXBoaWNzIFwKICAtZnJhbWV3b3JrIE5hdHVyYWxMYW5ndWFnZSBcCiAgIiRTUkMiIC1vICIkT1VUIgoKZWNobyAiPT09IFZlcmlmeSA9PT0iCmxzIC1sYSAiJE9VVCIKbGlwbyAtaW5mbyAiJE9VVCIKZWNobyAiLS0tIGFybTY0ZSBzbGljZSBsb2FkIGNvbW1hbmRzIChwaGFpIGNvIExDX0RZTERfQ0hBSU5FRF9GSVhVUFMpIC0tLSIKbGlwbyAtZXh0cmFjdCBhcm02NGUgIiRPVVQiIC1vdXRwdXQgL3RtcC9teWRvY2stYXJtNjRlLWNoZWNrLmR5bGliCm90b29sIC1sIC90bXAvbXlkb2NrLWFybTY0ZS1jaGVjay5keWxpYiB8IGdyZXAgLUUgIkxDX0RZTERfQ0hBSU5FRF9GSVhVUFN8TENfRFlMRF9JTkZPIiB8fCBlY2hvICJLSE9ORyBUSU0gVEhBWSBMQ19EWUxEXyogKGxvaSkiCmVjaG8gIi0tLSBhcm02NCBzbGljZSBsb2FkIGNvbW1hbmRzIC0tLSIKbGlwbyAtZXh0cmFjdCBhcm02NCAiJE9VVCIgLW91dHB1dCAvdG1wL215ZG9jay1hcm02NC1jaGVjay5keWxpYgpvdG9vbCAtbCAvdG1wL215ZG9jay1hcm02NC1jaGVjay5keWxpYiB8IGdyZXAgLUUgIkxDX0RZTERfQ0hBSU5FRF9GSVhVUFN8TENfRFlMRF9JTkZPIiB8fCBlY2hvICJLSE9ORyBUSU0gVEhBWSBMQ19EWUxEXyogKGxvaSkiCmVjaG8gIj09PSBPSzogJE9VVCA9PT0iCg==
+#!/bin/bash
+# Build MyDock v2.9.13-log (fat arm64 + arm64e) trên macOS với Xcode/Apple ld64.
+# Chạy trên GitHub Actions (macos runner) hoặc máy Mac có Xcode.
+# Apple ld64 tự tạo LC_DYLD_CHAINED_FIXUPS đúng chuẩn cho arm64e,
+# thứ mà lld trên Linux không làm được (đó là lý do bản fat build bằng
+# lld bị crash khi tiêm vào app hệ thống arm64e như Ghi chú).
+set -euo pipefail
+
+SRC="MyDock-v2.9.13-log-source.m"
+OUT="MyDock-v2.9.11-fat-macos.dylib"
+
+echo "=== Xcode / SDK ==="
+xcodebuild -version
+SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+echo "SDK: $SDK"
+
+echo "=== Build fat dylib (arm64 + arm64e) ==="
+xcrun --sdk iphoneos clang \
+  -arch arm64 -arch arm64e \
+  -isysroot "$SDK" \
+  -miphoneos-version-min=16.0 \
+  -fobjc-arc -O2 \
+  -dynamiclib \
+  -install_name "@rpath/MyDock.dylib" \
+  -Xlinker -rpath -Xlinker /var/jb/Library/Frameworks \
+  -Xlinker -rpath -Xlinker /var/jb/usr/lib \
+  -Xlinker -rpath -Xlinker "@loader_path/.jbroot/Library/Frameworks" \
+  -Xlinker -rpath -Xlinker "@loader_path/.jbroot/usr/lib" \
+  -F "$PWD" \
+  -framework CydiaSubstrate \
+  -framework Foundation -framework UIKit \
+  -framework CoreFoundation -framework CoreGraphics \
+  -framework NaturalLanguage \
+  "$SRC" -o "$OUT"
+
+echo "=== Verify ==="
+ls -la "$OUT"
+lipo -info "$OUT"
+echo "--- arm64e slice load commands (phai co LC_DYLD_CHAINED_FIXUPS) ---"
+lipo -extract arm64e "$OUT" -output /tmp/mydock-arm64e-check.dylib
+otool -l /tmp/mydock-arm64e-check.dylib | grep -E "LC_DYLD_CHAINED_FIXUPS|LC_DYLD_INFO" || echo "KHONG TIM THAY LC_DYLD_* (loi)"
+echo "--- arm64 slice load commands ---"
+lipo -extract arm64 "$OUT" -output /tmp/mydock-arm64-check.dylib
+otool -l /tmp/mydock-arm64-check.dylib | grep -E "LC_DYLD_CHAINED_FIXUPS|LC_DYLD_INFO" || echo "KHONG TIM THAY LC_DYLD_* (loi)"
+echo "=== OK: $OUT ==="
